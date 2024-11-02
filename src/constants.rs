@@ -8,3 +8,4 @@ pub static SEC_FETCH_DEST: &str = "empty";
 pub static USER_AGENT:&str="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0";
 pub static WSS_URL:&str="wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EAFF4E9FB37E23D68491D6F4&ConnectionId=";
 pub static ORIGIN: &str = "chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold";
+pub static KEY_SERVER:&str = "https://edge-sec.myaitool.top/?key=edge";
