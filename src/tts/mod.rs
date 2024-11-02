@@ -5,6 +5,7 @@ pub mod stream;
 
 mod proxy;
 use crate::error::{Error, ProxyError, Result};
+use isahc::{ReadResponseExt, RequestExt};
 use proxy::{
     http_proxy, http_proxy_async, socks4_proxy, socks4_proxy_async, socks5_proxy,
     socks5_proxy_asnyc, ProxyAsyncStream, ProxyStream,
@@ -182,7 +183,15 @@ fn build_websocket_request() -> Result<tungstenite::handshake::client::Request> 
     use tungstenite::http::header;
 
     let uuid = uuid::Uuid::new_v4().simple().to_string();
-    let mut request = format!("{}{}", constants::WSS_URL, uuid).into_client_request()?;
+
+    let key_info:serde_json::Value = isahc::Request::get(constants::KEY_SERVER)
+        .body(()).map_err(isahc::Error::from)?
+        .send()?
+        .json()?;
+    let sec_ms_gec = key_info["Sec-MS-GEC"].as_str().unwrap_or_default();
+    let sec_ms_gec_version = key_info["Sec-MS-GEC-Version"].as_str().unwrap_or_default();
+
+    let mut request = format!("{}{}&Sec-MS-GEC={}&Sec-MS-GEC-Version={}", constants::WSS_URL, uuid,sec_ms_gec,sec_ms_gec_version).into_client_request()?;
     let headers = request.headers_mut();
     headers.insert(
         header::PRAGMA,
